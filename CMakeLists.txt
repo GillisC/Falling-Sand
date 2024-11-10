@@ -8,6 +8,10 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(headers)
 
-add_executable(main src/main.cpp)
+add_executable(
+    main 
+    src/main.cpp
+    src/grid.cpp
+    )
 
 target_link_libraries(main ${SDL2_LIBRARIES})
