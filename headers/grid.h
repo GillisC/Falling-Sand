@@ -3,30 +3,30 @@
 #include <vector>
 #include <memory>
 #include "element.h"
+#include <SDL.h>
 
 class Grid {
-public:
+  public:
+    // Attributes
+    std::vector<std::vector<std::shared_ptr<Element>>> grid;
+    
     // Constructor
     Grid(int width, int height);
 
-    // Clears the grid
+    // Methods
     void clear();
-
-    // Sets an element at a specific position
     void set(int x, int y, std::shared_ptr<Element> element);
-
-    // Swaps elements between two positions
     void swap(int x1, int y1, int x2, int y2);
-
-    // Checks if a cell is empty
-    bool isEmpty(int x, int y);
-
+    bool isEmpty(int x, int y) const;
+    void updateElements();
+    void displayElements(SDL_Renderer* renderer) const;
+    int getWidth() const;
+    int getHeight() const;
+    std::vector<std::tuple<int, int>> getCircleSelection(int x, int y, int radius) const;
     std::string toString() const;
 
 private:
     int width, height;
-    std::vector<std::vector<std::shared_ptr<Element>>> grid;
 
-    // Checks if coordinates are within bounds
     bool isInBounds(int x, int y) const;
 };

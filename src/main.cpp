@@ -1,10 +1,12 @@
 
 // Standard library imports
 #include <iostream>
+#include <math.h>
 
 // Third party libraries
 #include <SDL.h>
 #include "grid.h"
+#include "sand.h"
 
 
 bool running = true;
@@ -47,10 +49,12 @@ int main(int arcc, char* argv[]) {
 
     SDL_Event event;
 
-    Grid grid(10, 10);
-    cout << grid.toString() << endl;
+    Grid grid(width, height);
 
     while (running) {
+        
+        SDL_SetRenderDrawColor(renderer, 31, 31, 31, 255);
+        SDL_RenderClear(renderer);
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -63,17 +67,27 @@ int main(int arcc, char* argv[]) {
                     cout << "Key pressed: " << SDL_GetKeyName(event.key.keysym.sym) << endl;
                 }
             }
-            if (event.type == SDL_MOUSEMOTION) {
-                cout << "Mouse moved to (" << event.motion.x << ", " << event.motion.y << ")" << endl;
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+                auto selection = grid.getCircleSelection(event.motion.x, event.motion.y, 20);
+                for (const auto& tup: selection) {
+                    int x = std::get<0>(tup);
+                    int y = std::get<1>(tup);
+                    grid.set(x, y, make_shared<Sand>());
+                }
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 31, 31, 31, 255);
-        SDL_RenderClear(renderer);
+        grid.updateElements();
+        grid.displayElements(renderer);
+        
         SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
+
+
 }
+
+
